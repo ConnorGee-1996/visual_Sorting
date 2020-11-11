@@ -5,8 +5,9 @@ import numpy as np
 import time
 import pdb
 
-Arr = np.random.randint(0,100,500)
+Arr = np.random.randint(0,100,100)
 
+# Sorting algos
 def selection_sort(Arr):
 	for min in range(len(Arr)):
 		
@@ -15,7 +16,27 @@ def selection_sort(Arr):
 
 		Arr = swap(Arr, min, loc)
 		yield Arr
+def bubble_sort(Arr):
+	
+	
+	finished = False
+	while finished == False:
 
+		# check if done by iteration through the list with no swaps
+		consecutive = 0
+		
+		for i in range(len(Arr) - 1):
+			j = i + 1
+
+			if Arr[i] > Arr[j]:
+				swap(Arr, i, j)
+				consecutive += 1
+			yield Arr
+		
+		# check if done		
+		if consecutive == 0:
+			finished = True
+	yield Arr		
 
 # Swap - swaps two elements from the input array in place
 def swap(A,i,j):
@@ -28,11 +49,12 @@ def swap(A,i,j):
 	return A
 
 
-algo = selection_sort(Arr)
+algo = bubble_sort(Arr)
+titles = ["Bubble Sort","Selection Sort"]
 
-
+# makes the figure and the graph
 fig, ax = plt.subplots()
-ax.set_title("s")
+ax.set_title(titles[0])
 bar_rec = ax.bar(range(len(Arr)), Arr, align='edge')
 text = ax.text(0.02, 0.95, "", transform=ax.transAxes)
 

@@ -1,14 +1,16 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation as anim
 import numpy as np
+import random
 
 # Arr = np.random.randint(0,100,50)
 # Arr = np.array([6, 41, 41, 50, 51, 59, 78, 41, 52, 24])
-Arr = np.arange(50)
+# Arr = np.arange(50)
+Arr = []
+for i in range(0, 50):
+    n = random.randint(1, 30)
+    Arr.append(n)
 print(Arr)
-np.random.shuffle(Arr)
-print(Arr)
-
 
 # Sorting algorithms - adding different colors
 def selection_sort(arr):
@@ -72,6 +74,8 @@ def bubble_sort(arr):
         num_op[0] += 1
         if len(sorted_id) == len(arr):
             break
+
+    sorted_id.append(i)
     yield arr, num_op, sorted_id, num_swaps, i, j  # Arr
 
 
@@ -165,12 +169,21 @@ def quick_sort_mid(arr, bot, top, sorted_ids):
             if i >= k:
                 break
 
-            swap(arr, i, k)
-            num_swaps += 1
+            num_op += 1
+            if Arr[i] == Arr[k] == pivot:
+                i += 1
+                yield arr, num_op, sorted_ids, num_swaps, k, i  # Arr
+                num_swaps = 0
+                num_op = 0
 
-            yield arr, num_op, sorted_ids, num_swaps, k, i  # Arr
-            num_swaps = 0
-            num_op = 0
+            num_op += 1
+            if Arr[i] != Arr[k]:
+                swap(arr, i, k)
+                num_swaps += 1
+
+                yield arr, num_op, sorted_ids, num_swaps, k, i  # Arr
+                num_swaps = 0
+                num_op = 0
 
         if arr[k] == pivot:
             sorted_ids.append(k)
@@ -240,69 +253,72 @@ text = ax.text(0.01, 0.93, "", transform=ax.transAxes)
 
 # recursion algorithms
 
-algo = quick_sort_mid(Arr, 0, len(Arr) - 1, [])
-# algo = quick_sort_end(Arr,0,len(Arr) -1,[])
+# #algo = quick_sort_mid(Arr, 0, len(Arr) - 1, [])
+# #algo = quick_sort_end(Arr,0,len(Arr) -1,[])
+#
+# swaps = []
+# comp = []
+#
+#
+# def update_plot2(arr, rec, swap_number, comp_number):
+#     counter = 0
+#
+#     if arr[3] != 0:
+#         swap_number.append(arr[3])
+#     if arr[1] != 0:
+#         comp_number.append(arr[1])
+#
+#     for rec, val in zip(rec, arr[0]):
+#         rec.set_height(val)
+#
+#         # make all unsorted red apart from comparison index
+#         if counter == arr[4] or counter == arr[5]:
+#             rec.set_color("darkblue")
+#         else:
+#             rec.set_color("firebrick")
+#
+#         if counter in arr[2]:
+#             rec.set_color("forestgreen")
+#
+#         if counter == len(arr[0]):
+#             rec.set_color("forestgreen")
+#
+#         counter += 1
+#     text.set_text("No.of swaps :{}\nNo.of comparisons: {}".format(sum(swap_number), sum(comp_number)))
+#
+#
+# anima = anim.FuncAnimation(fig, func=update_plot2, fargs=(bar_rec, swaps, comp), frames=algo, interval=1, repeat=False)
+# plt.show()
 
-swaps = []
-comp = []
+# non recursion algorithms
+#algo = selection_sort(Arr)
+algo = bubble_sort(Arr)
+
+why = "This has to be inserted into the function else it takes in the array as separate arguments into the function instead of one. not sure why"
 
 
-def update_plot2(arr, rec, swap_number, comp_number):
+def update_plot(Arr, rec,why):
     counter = 0
-
-    if arr[3] != 0:
-        swap_number.append(arr[3])
-    if arr[1] != 0:
-        comp_number.append(arr[1])
-
-    for rec, val in zip(rec, arr[0]):
+    for rec, val in zip(rec, Arr[0]):
         rec.set_height(val)
 
         # make all unsorted red apart from comparison index
-        if counter == arr[4] or counter == arr[5]:
+        if counter == Arr[4] or counter == Arr[5]:
             rec.set_color("darkblue")
         else:
             rec.set_color("firebrick")
 
-        if counter in arr[2]:
+        if counter in Arr[2] :
             rec.set_color("forestgreen")
 
-        if counter == len(arr[0]):
+        if counter == len(Arr[0]):
             rec.set_color("forestgreen")
+
 
         counter += 1
-    text.set_text("No.of swaps :{}\nNo.of comparisons: {}".format(sum(swap_number), sum(comp_number)))
+    text.set_text("No.of swaps :{}\nNo.of comparisons: {}".format(Arr[3],Arr[1]))
 
 
 # noinspection PyTypeChecker
-anima = anim.FuncAnimation(fig, func=update_plot2, fargs=(bar_rec, swaps, comp), frames=algo, interval=1, repeat=False)
+anima = anim.FuncAnimation(fig, func=update_plot, fargs=(bar_rec,why), frames =algo, interval=1, repeat=False)
 plt.show()
-
-# non recursion algorithms
-# algo = selection_sort(Arr)
-# #algo = bubble_sort(Arr)
-
-# why = "This has to be inserted into the function else it takes in the array as separate arguments into the function
-# instead of one. not sure why." def update_plot(Arr, rec,why): counter = 0
-
-#     for rec, val in zip(rec, Arr[0]):
-#         rec.set_height(val)
-
-#         # make all unsorted red apart from comparison index
-#         if counter == Arr[4] or counter == Arr[5]:
-#         	rec.set_color("dark blue")
-#         else:
-#         	rec.set_color("firebrick")
-
-#         if counter in Arr[2] :
-#         	rec.set_color("forest green")
-
-#         if counter == len(Arr[0]):
-#             rec.set_color("forest green")
-#         print(np.sort(Arr[2]))    
-
-#         counter += 1
-#     text.set_text("No.of swaps :{}\nNo.of comparisons: {}".format(Arr[3],Arr[1]))
-
-# anima = anim.FuncAnimation(fig, func=update_plot, fargs=(bar_rec,why), frames=algo, interval=1, repeat=False)
-# plt.show()

@@ -6,11 +6,19 @@ import random
 # Arr = np.random.randint(0,100,50)
 # Arr = np.array([6, 41, 41, 50, 51, 59, 78, 41, 52, 24])
 # Arr = np.arange(50)
+
+#array 1
 Arr = []
-for i in range(0, 50):
+for i in range(0, 150):
     n = random.randint(1, 30)
     Arr.append(n)
 print(Arr)
+
+# #array 2
+# Arr = np.arange(200)
+# random.shuffle(Arr)
+# Arr = list(Arr)
+
 
 # Sorting algorithms - adding different colors
 def selection_sort(arr):
@@ -244,6 +252,58 @@ def swap(a, i, j):
     return a
 
 
+def merge_sort(arr, divider,sorted_ids):
+    global first, n
+    tick = True
+
+    num_op = 0
+    num_swaps = 0
+    sorted_ids = sorted_ids
+
+    for n in range(0, len(arr), divider):
+        if tick == True:
+            first = arr[n:n + divider]
+            tick = False
+            i_wrt_Arr = n
+        elif tick == False:
+            second = arr[n:n + divider]
+            k_wrt_Arr = n
+            tick = True
+
+            i = k = 0
+            a = n - divider
+
+            num_op += 1
+            while i <= len(first) - 1 and k <= len(second) - 1:
+                num_op += 1
+                if first[i] <= second[k]:
+                    i += 1
+                    i_wrt_Arr += 1
+                    a += 1
+                    yield arr, num_op, sorted_ids, num_swaps, i_wrt_Arr, k + k_wrt_Arr
+                    num_op = 0
+                    num_swaps = 0
+                elif first[i] > second[k]:
+                    num_op += 1
+                    num_swaps += 1
+                    # pop and insert
+                    number = arr.pop(k + k_wrt_Arr)
+                    arr.insert(a, number)
+
+                    k += 1
+                    a += 1
+                    yield arr, num_op, sorted_ids, num_swaps, i_wrt_Arr, k + k_wrt_Arr
+                    num_op = 0
+                    num_swaps = 0
+
+    if len(arr[n:n + divider]) < len(arr):
+        yield from merge_sort(arr, divider * 2,sorted_ids)
+    else:
+        for n in range(len(arr)):
+            sorted_ids.append(n)
+        yield arr, num_op, sorted_ids, num_swaps,[],[]
+
+
 # Set up figure and axes
 fig, ax = plt.subplots(figsize=[10, 6])
 titles = ["Bubble Sort", "Selection Sort", "quick_sort"]
@@ -253,72 +313,72 @@ text = ax.text(0.01, 0.93, "", transform=ax.transAxes)
 
 # recursion algorithms
 
-# #algo = quick_sort_mid(Arr, 0, len(Arr) - 1, [])
-# #algo = quick_sort_end(Arr,0,len(Arr) -1,[])
-#
-# swaps = []
-# comp = []
-#
-#
-# def update_plot2(arr, rec, swap_number, comp_number):
-#     counter = 0
-#
-#     if arr[3] != 0:
-#         swap_number.append(arr[3])
-#     if arr[1] != 0:
-#         comp_number.append(arr[1])
-#
-#     for rec, val in zip(rec, arr[0]):
-#         rec.set_height(val)
-#
-#         # make all unsorted red apart from comparison index
-#         if counter == arr[4] or counter == arr[5]:
-#             rec.set_color("darkblue")
-#         else:
-#             rec.set_color("firebrick")
-#
-#         if counter in arr[2]:
-#             rec.set_color("forestgreen")
-#
-#         if counter == len(arr[0]):
-#             rec.set_color("forestgreen")
-#
-#         counter += 1
-#     text.set_text("No.of swaps :{}\nNo.of comparisons: {}".format(sum(swap_number), sum(comp_number)))
-#
-#
-# anima = anim.FuncAnimation(fig, func=update_plot2, fargs=(bar_rec, swaps, comp), frames=algo, interval=1, repeat=False)
-# plt.show()
+#algo = quick_sort_mid(Arr, 0, len(Arr) - 1, [])
+#algo = quick_sort_end(Arr,0,len(Arr) -1,[])
+algo = merge_sort(Arr,1,[])
 
-# non recursion algorithms
-#algo = selection_sort(Arr)
-algo = bubble_sort(Arr)
-
-why = "This has to be inserted into the function else it takes in the array as separate arguments into the function instead of one. not sure why"
+swaps = []
+comp = []
 
 
-def update_plot(Arr, rec,why):
+def update_plot2(arr, rec, swap_number, comp_number):
     counter = 0
-    for rec, val in zip(rec, Arr[0]):
+
+    if arr[3] != 0:
+        swap_number.append(arr[3])
+    if arr[1] != 0:
+        comp_number.append(arr[1])
+
+    for rec, val in zip(rec, arr[0]):
         rec.set_height(val)
 
         # make all unsorted red apart from comparison index
-        if counter == Arr[4] or counter == Arr[5]:
+        if counter == arr[4] or counter == arr[5]:
             rec.set_color("darkblue")
         else:
             rec.set_color("firebrick")
 
-        if counter in Arr[2] :
+        if counter in arr[2]:
             rec.set_color("forestgreen")
 
-        if counter == len(Arr[0]):
+        if counter == len(arr[0]):
             rec.set_color("forestgreen")
-
 
         counter += 1
-    text.set_text("No.of swaps :{}\nNo.of comparisons: {}".format(Arr[3],Arr[1]))
+    text.set_text("No.of swaps :{}\nNo.of comparisons: {}".format(sum(swap_number), sum(comp_number)))
 
 
-# noinspection PyTypeChecker
-anima = anim.FuncAnimation(fig, func=update_plot, fargs=(bar_rec,why), frames =algo, interval=1, repeat=False)
+anima = anim.FuncAnimation(fig, func=update_plot2, fargs=(bar_rec, swaps, comp), frames=algo, interval=1, repeat=False)
 plt.show()
+
+# non recursion algorithms
+# # algo = selection_sort(Arr)
+# algo = bubble_sort(Arr)
+#
+# why = "This has to be inserted into the function else it takes in the array as separate arguments into the function instead of one. not sure why"
+#
+#
+# def update_plot(Arr, rec, why):
+#     counter = 0
+#     for rec, val in zip(rec, Arr[0]):
+#         rec.set_height(val)
+#
+#         # make all unsorted red apart from comparison index
+#         if counter == Arr[4] or counter == Arr[5]:
+#             rec.set_color("darkblue")
+#         else:
+#             rec.set_color("firebrick")
+#
+#         if counter in Arr[2]:
+#             rec.set_color("forestgreen")
+#
+#         if counter == len(Arr[0]):
+#             rec.set_color("forestgreen")
+#
+#         counter += 1
+#     text.set_text("No.of swaps :{}\nNo.of comparisons: {}".format(Arr[3], Arr[1]))
+#
+#
+# # noinspection PyTypeChecker
+# anima = anim.FuncAnimation(fig, func=update_plot, fargs=(bar_rec, why), frames=algo, interval=1, repeat=False)
+# plt.show()
